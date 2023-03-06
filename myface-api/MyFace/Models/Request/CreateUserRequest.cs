@@ -14,7 +14,8 @@ namespace MyFace.Models.Request
 
         [Required]
         [StringLength(70)]
-        [DataType(DataType.Password)]
+        //[DataType(DataType.Password)]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+-=])[A-Za-z\d!@#$%^&*()_+-=]{8,}$")]
         public string Password { get; set; }
 
         [Required]

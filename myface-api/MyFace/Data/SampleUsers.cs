@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using MyFace.Models.Database;
-
+using MyFace.Repositories;
 
 namespace MyFace.Data
 {
@@ -117,7 +117,7 @@ namespace MyFace.Data
         {
             return Enumerable.Range(0, NumberOfUsers).Select(CreateRandomUser);
         }
-        
+
         private static User CreateRandomUser(int index)
         {
             var passwordSalt = SaltGenerator.GetSalt();

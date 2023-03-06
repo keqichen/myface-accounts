@@ -3,7 +3,7 @@ using MyFace.Models.Database;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
-namespace MyFace.Data;
+namespace MyFace.Repositories;
 
 public static class HashGenerator
 {

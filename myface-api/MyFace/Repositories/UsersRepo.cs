@@ -2,7 +2,7 @@
 using System.Linq;
 using MyFace.Models.Database;
 using MyFace.Models.Request;
-using MyFace.Data;
+using MyFace.Repositories;
 
 namespace MyFace.Repositories
 {
@@ -87,7 +87,6 @@ namespace MyFace.Repositories
             user.Email = update.Email;
             user.ProfileImageUrl = update.ProfileImageUrl;
             user.CoverImageUrl = update.CoverImageUrl;
-
             _context.Users.Update(user);
             _context.SaveChanges();
 
