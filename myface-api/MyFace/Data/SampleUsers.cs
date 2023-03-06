@@ -2,6 +2,7 @@
 using System.Linq;
 using MyFace.Models.Database;
 
+
 namespace MyFace.Data
 {
     public static class SampleUsers
@@ -111,14 +112,15 @@ namespace MyFace.Data
             new List<string> { "Jane", "Iceton", "jiceton2q", "jiceton2q@lulu.com" },
             new List<string> { "Marjy", "Beadell", "mbeadell2r", "mbeadell2r@delicious.com" }
         };
-        
+
         public static IEnumerable<User> GetUsers()
         {
             return Enumerable.Range(0, NumberOfUsers).Select(CreateRandomUser);
         }
-
+        private static string _passwordSalt = SaltGenerator.GetSalt();
         private static User CreateRandomUser(int index)
         {
+
             return new User
             {
                 FirstName = Data[index][0],
@@ -127,6 +129,8 @@ namespace MyFace.Data
                 Email = Data[index][3],
                 ProfileImageUrl = ImageGenerator.GetProfileImage(Data[index][2]),
                 CoverImageUrl = ImageGenerator.GetCoverImage(index),
+                PasswordSalt = _passwordSalt,
+                PasswordHash = HashGenerator.GetHashedPassword(_passwordSalt, "password123")
             };
         }
     }
