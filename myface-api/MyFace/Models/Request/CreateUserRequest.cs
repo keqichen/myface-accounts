@@ -12,10 +12,10 @@ namespace MyFace.Models.Request
         [StringLength(70)]
         public string LastName { get; set; }
 
-        // [Required]
-        // [Password]
-        // [StringLength(70)]
-        // public string Password { get; set; }
+        [Required]
+        [StringLength(70)]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
 
         [Required]
         [EmailAddress]

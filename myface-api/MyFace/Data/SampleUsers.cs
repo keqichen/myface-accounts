@@ -117,10 +117,10 @@ namespace MyFace.Data
         {
             return Enumerable.Range(0, NumberOfUsers).Select(CreateRandomUser);
         }
-        private static string _passwordSalt = SaltGenerator.GetSalt();
+        
         private static User CreateRandomUser(int index)
         {
-
+            var passwordSalt = SaltGenerator.GetSalt();
             return new User
             {
                 FirstName = Data[index][0],
@@ -129,8 +129,8 @@ namespace MyFace.Data
                 Email = Data[index][3],
                 ProfileImageUrl = ImageGenerator.GetProfileImage(Data[index][2]),
                 CoverImageUrl = ImageGenerator.GetCoverImage(index),
-                PasswordSalt = _passwordSalt,
-                PasswordHash = HashGenerator.GetHashedPassword(_passwordSalt, "password123")
+                PasswordSalt = passwordSalt,
+                PasswordHash = HashGenerator.GetHashedPassword(passwordSalt, "password123")
             };
         }
     }

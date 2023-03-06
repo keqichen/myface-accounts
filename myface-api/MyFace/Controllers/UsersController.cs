@@ -31,6 +31,8 @@ namespace MyFace.Controllers
             return new UserResponse(user);
         }
 
+        // calling another method, using our salt and hash
+
         [HttpPost("create")]
         public IActionResult Create([FromBody] CreateUserRequest newUser)
         {

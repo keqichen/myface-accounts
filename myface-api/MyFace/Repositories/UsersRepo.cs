@@ -2,6 +2,7 @@
 using System.Linq;
 using MyFace.Models.Database;
 using MyFace.Models.Request;
+using MyFace.Data;
 
 namespace MyFace.Repositories
 {
@@ -59,11 +60,14 @@ namespace MyFace.Repositories
 
         public User Create(CreateUserRequest newUser)
         {
+            var passwordSalt = SaltGenerator.GetSalt();
             var insertResponse = _context.Users.Add(new User
             {
                 FirstName = newUser.FirstName,
                 LastName = newUser.LastName,
                 Email = newUser.Email,
+                PasswordSalt = passwordSalt,
+                PasswordHash = HashGenerator.GetHashedPassword(passwordSalt, newUser.Password),
                 Username = newUser.Username,
                 ProfileImageUrl = newUser.ProfileImageUrl,
                 CoverImageUrl = newUser.CoverImageUrl,
