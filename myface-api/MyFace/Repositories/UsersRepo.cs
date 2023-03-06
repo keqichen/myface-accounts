@@ -3,6 +3,7 @@ using System.Linq;
 using MyFace.Models.Database;
 using MyFace.Models.Request;
 using MyFace.Repositories;
+using System.Web;
 
 namespace MyFace.Repositories
 {
@@ -15,7 +16,7 @@ namespace MyFace.Repositories
         User Update(int id, UpdateUserRequest update);
         void Delete(int id);
     }
-    
+
     public class UsersRepo : IUsersRepo
     {
         private readonly MyFaceDbContext _context;
@@ -24,11 +25,11 @@ namespace MyFace.Repositories
         {
             _context = context;
         }
-        
+
         public IEnumerable<User> Search(UserSearchRequest search)
         {
             return _context.Users
-                .Where(p => search.Search == null || 
+                .Where(p => search.Search == null ||
                             (
                                 p.FirstName.ToLower().Contains(search.Search) ||
                                 p.LastName.ToLower().Contains(search.Search) ||
@@ -43,7 +44,7 @@ namespace MyFace.Repositories
         public int Count(UserSearchRequest search)
         {
             return _context.Users
-                .Count(p => search.Search == null || 
+                .Count(p => search.Search == null ||
                             (
                                 p.FirstName.ToLower().Contains(search.Search) ||
                                 p.LastName.ToLower().Contains(search.Search) ||
@@ -52,10 +53,51 @@ namespace MyFace.Repositories
                             ));
         }
 
+        //an easier endpoint to add basic auth;
         public User GetById(int id)
         {
-            return _context.Users
-                .Single(user => user.Id == id);
+            var authHeader = HttpContext.Request.Headers["Authorization"];
+            var username;
+            var inputHashedPassword;
+
+            if (authHeader != null && authHeader.StartsWith("Basic"))
+            {
+                string encodedUsernamePassword = authHeader.Substring("Basic ".Length).Trim();
+                Encoding encoding = Encoding.GetEncoding("iso-8859-1");
+                string usernamePassword = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword));
+                int seperatorIndex = usernamePassword.IndexOf(':');
+                username = usernamePassword.Substring(0, seperatorIndex);
+
+                var password = usernamePassword.Substring(seperatorIndex + 1);
+
+                var passwordSalt = _context.Users
+                           .Where(u => u.Username == username)
+                           .FirstOrDefault(u.PasswordSalt);
+                inputHashedPassword = HashGenerator.GetHashedPassword(passwordSalt, password);
+
+                var user = _context.Users.FirstOrDefault(u => u.Username == username);
+
+                var dbPassword = _context.Users
+                         .Where(u => u.Username == username)
+                         .FirstOrDefault(u.PasswordHash);
+
+            }
+            else
+            {
+                //Handle what happens if that isn't the case
+                throw new Exception("The authorization header is either empty or isn't Basic.");
+            }
+          
+            if (inputHashedPassword == dbPassword)
+            {
+                return _context.Users
+                        .Single(user => user.Id == id);
+            }
+          
+            else
+            {
+                return StatusCode(401, "Unauthorised information detected");
+            }
         }
 
         public User Create(CreateUserRequest newUser)

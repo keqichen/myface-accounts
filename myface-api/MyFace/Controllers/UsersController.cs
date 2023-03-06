@@ -42,7 +42,6 @@ namespace MyFace.Controllers
             }
             
             var user = _users.Create(newUser);
-
             var url = Url.Action("GetById", new { id = user.Id });
             var responseViewModel = new UserResponse(user);
             return Created(url, responseViewModel);
