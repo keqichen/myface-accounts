@@ -40,6 +40,12 @@ export interface NewPost {
     userId: number;
 }
 
+export interface Login {
+    username: string;
+    password: string;
+    message: string;
+}
+
 export async function fetchUsers(searchTerm: string, page: number, pageSize: number): Promise<ListResponse<User>> {
     const response = await fetch(`https://localhost:5001/users?search=${searchTerm}&page=${page}&pageSize=${pageSize}`);
     return await response.json();
@@ -78,8 +84,33 @@ export async function createPost(newPost: NewPost) {
         },
         body: JSON.stringify(newPost),
     });
-    
+
     if (!response.ok) {
         throw new Error(await response.json())
     }
+}
+
+export async function checkAuthHeader(username: string, password: string): Promise<boolean> {
+    const response = await fetch(`https://localhost:5001/login`, {
+        headers: {
+            //encoding is not encrypting/hashing anything but just writing something in a different way;
+            'Authorization': `Basic ${btoa(`${username}:${password}`)}`,
+            'Accept': 'application/json',
+            'Content-Type': 'multipart/form-data'
+        },
+    }
+    )
+    if (response.ok) {
+        return true;
+    }
+    else {
+        throw new Error(await response.json())
+
+    }
+    // return (response.json());
+
+    // if (!dbResponse) {
+    //     return false;
+    // }
+    // else { return true };
 }
