@@ -4,6 +4,11 @@ using MyFace.Models.Database;
 using MyFace.Models.Request;
 using MyFace.Repositories;
 using System.Web;
+using System;
+using System.Text;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 
 namespace MyFace.Repositories
 {
@@ -15,6 +20,7 @@ namespace MyFace.Repositories
         User Create(CreateUserRequest newUser);
         User Update(int id, UpdateUserRequest update);
         void Delete(int id);
+        bool HasAccess(string authHeader);
     }
 
     public class UsersRepo : IUsersRepo
@@ -53,13 +59,10 @@ namespace MyFace.Repositories
                             ));
         }
 
-        //an easier endpoint to add basic auth;
-        public User GetById(int id)
+        public bool HasAccess(string authHeader)
         {
-            var authHeader = HttpContext.Request.Headers["Authorization"];
-            var username;
-            var inputHashedPassword;
-
+            string username;
+            string password;
             if (authHeader != null && authHeader.StartsWith("Basic"))
             {
                 string encodedUsernamePassword = authHeader.Substring("Basic ".Length).Trim();
@@ -67,37 +70,41 @@ namespace MyFace.Repositories
                 string usernamePassword = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword));
                 int seperatorIndex = usernamePassword.IndexOf(':');
                 username = usernamePassword.Substring(0, seperatorIndex);
-
-                var password = usernamePassword.Substring(seperatorIndex + 1);
-
-                var passwordSalt = _context.Users
-                           .Where(u => u.Username == username)
-                           .FirstOrDefault(u.PasswordSalt);
-                inputHashedPassword = HashGenerator.GetHashedPassword(passwordSalt, password);
-
-                var user = _context.Users.FirstOrDefault(u => u.Username == username);
-
-                var dbPassword = _context.Users
-                         .Where(u => u.Username == username)
-                         .FirstOrDefault(u.PasswordHash);
-
+                password = usernamePassword.Substring(seperatorIndex + 1);
             }
             else
             {
                 //Handle what happens if that isn't the case
                 throw new Exception("The authorization header is either empty or isn't Basic.");
             }
-          
+
+            // checking header username against exisisting db username
+            var dbUser = _context.Users.FirstOrDefault(u => u.Username == username);
+
+            var dbpasswordSalt = dbUser.PasswordSalt;
+            // to hash header password
+            var inputHashedPassword = HashGenerator.GetHashedPassword(dbpasswordSalt, password);
+
+            // var dbuser = dbUser.Username;
+            var dbPassword = dbUser.PasswordHash;
             if (inputHashedPassword == dbPassword)
             {
-                return _context.Users
-                        .Single(user => user.Id == id);
+                return true;
             }
-          
             else
             {
-                return StatusCode(401, "Unauthorised information detected");
+                return false;
             }
+        }
+
+        //an easier endpoint to add basic auth;
+        public User GetById(int id)
+        {
+            //  var authHeader = HttpContext.Request.Headers["Authorization"];
+            // HttpContext httpContext = HttpContext.Current;
+            // string authHeader = this.httpContext.Request.Headers["Authorization"];
+            return _context.Users
+                .Single(user => user.Id == id);
         }
 
         public User Create(CreateUserRequest newUser)
