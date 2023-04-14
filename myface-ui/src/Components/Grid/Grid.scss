@@ -4,7 +4,7 @@
   margin: -10px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+  gap: 12px;
   overflow-x: auto;
 
   @media screen and (max-width: 440px) {

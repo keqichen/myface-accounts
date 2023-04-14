@@ -4,5 +4,11 @@
   .load-more {
     @include secondaryButton;
     margin-top: $spacing-medium;
+
+    &:hover{
+      cursor: pointer;
+      background-color: orange;
+      color: $color-background-darker;
+    }
   }
 }
