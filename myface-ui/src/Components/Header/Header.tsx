@@ -13,7 +13,7 @@ export function Header(): JSX.Element {
 export function Nav(): JSX.Element {
     return (
         <nav className="nav">
-            <NavLink className="nav-link" to="/">Feed</NavLink>
+            <NavLink className="nav-link" to="/">Posts</NavLink>
             <NavLink className="nav-link" to="/users">Users</NavLink>
         </nav>
     );

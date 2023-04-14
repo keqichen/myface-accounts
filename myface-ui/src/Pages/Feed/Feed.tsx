@@ -9,7 +9,7 @@ import './Feed.scss';
 export function Feed(): JSX.Element {
     return (
         <Page containerClassName={"feed"}>
-            <h1 className="title">Feed</h1>
+            <h1 className="title">Posts</h1>
             <InfiniteList fetchItems={fetchPosts} renderItem={post => <PostCard key={post.id} post={post}/>}/>
             <Link className="create-post" to="/new-post">+</Link>
         </Page>

@@ -8,7 +8,7 @@ $create-post-button-size: 54px;
   .title {
     @include titleFont;
   }
-  
+
   .create-post {
     @include font(32px, $create-post-button-size, $color-background);
     text-align: center;

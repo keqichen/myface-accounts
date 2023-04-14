@@ -1,10 +1,10 @@
 ﻿@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 
-$color-primary: orange;
+$color-primary: #2985FF;
 $color-primary-lighter: lighten($color-primary, 10%);
-$color-background: #FFFFFF;
-$color-background-darker: darken($color-background, 10%);
-$color-foreground: #111111;
+$color-background: #252A38;
+$color-background-darker: #151820;
+$color-foreground: #DCDCDC;
 
 $spacing-small: 10px;
 $spacing-medium: 20px;
@@ -12,7 +12,7 @@ $spacing-medium: 20px;
 $gutter-width: $spacing-medium;
 
 @mixin font($font-size, $line-height: 1.5, $color: $color-foreground) {
-  font-family: "Roboto", sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: $font-size;
   line-height: $line-height;
   color: $color;

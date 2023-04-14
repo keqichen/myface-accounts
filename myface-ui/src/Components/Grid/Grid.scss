@@ -1,10 +1,19 @@
 ﻿.grid {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
   margin: -10px;
-  
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  @media screen and (max-width: 440px) {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .list-item {
+      flex-grow: 1;
+    }
+  }
+
   .list-item {
-    flex-grow: 1;
+    // flex-grow: 1;
   }
 }
