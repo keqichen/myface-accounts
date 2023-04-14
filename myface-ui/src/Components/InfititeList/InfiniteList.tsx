@@ -26,12 +26,12 @@ export function InfiniteList<T>(props: InfiniteListProps<T>): JSX.Element {
     }
     
     useEffect(() => {
-        props.fetchItems(1, 10)
+        props.fetchItems(1, 9)
             .then(replaceItems);
     }, [props]);
 
     function incrementPage() {
-        props.fetchItems(page + 1, 10)
+        props.fetchItems(page + 1, 9)
             .then(appendItems);
     }
     
