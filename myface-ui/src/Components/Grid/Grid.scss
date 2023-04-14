@@ -1,7 +1,10 @@
-﻿.grid {
+﻿@import "../../Styles/constants";
+
+.grid {
   margin: -10px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
 
   @media screen and (max-width: 440px) {
     display: flex;
