@@ -5,6 +5,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 18px;
+  overflow-x: auto;
 
   @media screen and (max-width: 440px) {
     display: flex;
