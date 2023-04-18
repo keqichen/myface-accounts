@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +24,20 @@ namespace MyFace.Controllers
             {
                 return Ok();
             }
+            return Ok();
+        }
+
+        [HttpPost("")]
+        public async Task<IActionResult> Login()
+        {
+            await HttpContext.SignInAsync(new ClaimsPrincipal(
+                new ClaimsIdentity(
+                    new Claim[]
+                    {
+                        new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
+                    }
+                )
+            ));
             return Ok();
         }
     }

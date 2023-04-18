@@ -40,6 +40,10 @@ namespace MyFace
 
             services.AddControllers();
 
+            //build cookie;
+            services.AddAuthentication()
+                .AddCookie("default");
+
             services.AddTransient<IInteractionsRepo, InteractionsRepo>();
             services.AddTransient<IPostsRepo, PostsRepo>();
             services.AddTransient<IUsersRepo, UsersRepo>();
@@ -65,6 +69,9 @@ namespace MyFace
             app.UseCors(CORS_POLICY_NAME);
 
             app.UseEndpoints(endpoints => endpoints.MapControllers());
+
+            //use the cookie;
+            app.UseAuthentication();
         }
     }
 }

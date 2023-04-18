@@ -12,7 +12,6 @@ namespace MyFace.Data
         {
             return Enumerable.Range(0, NumberOfPosts).Select(CreateRandomPost);
         }
-
         private static Post CreateRandomPost(int index)
         {
             return new Post
