@@ -2,6 +2,8 @@
 
 .header {
   background-color: $color-primary;
+  color: $color-background-darker;
+  font-weight: bold;
   text-align: center;
   
   .home-link {

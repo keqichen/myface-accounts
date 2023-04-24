@@ -92,6 +92,9 @@ export async function createPost(newPost: NewPost) {
 
 export async function checkAuthHeader(username: string, password: string): Promise<boolean> {
     const response = await fetch(`https://localhost:5001/login`, {
+        //include cookies;
+        method: "Get",
+        credentials: "include",
         headers: {
             //encoding is not encrypting/hashing anything but just writing something in a different way;
             'Authorization': `Basic ${btoa(`${username}:${password}`)}`,
@@ -113,4 +116,18 @@ export async function checkAuthHeader(username: string, password: string): Promi
     //     return false;
     // }
     // else { return true };
+}
+
+//fetch API of cookies
+export async function loginCookies() {
+    const response = await fetch(`https://localhost:5001/login`, {
+        method: 'POST',
+        credentials: 'include'
+    })
+    if (response.ok) {
+        return true;
+    }
+    else {
+        throw new Error(await response.json())
+    }
 }
