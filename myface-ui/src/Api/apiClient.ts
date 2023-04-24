@@ -119,15 +119,15 @@ export async function checkAuthHeader(username: string, password: string): Promi
 }
 
 //fetch API of cookies
-export async function loginCookies() {
-    const response = await fetch(`https://localhost:5001/login`, {
-        method: 'POST',
-        credentials: 'include'
-    })
-    if (response.ok) {
-        return true;
-    }
-    else {
-        throw new Error(await response.json())
-    }
-}
+// export async function loginCookies() {
+//     const response = await fetch(`https://localhost:5001/login`, {
+//         method: 'POST',
+//         credentials: 'include'
+//     })
+//     if (response.ok) {
+//         return true;
+//     }
+//     else {
+//         throw new Error(await response.json())
+//     }
+// }
