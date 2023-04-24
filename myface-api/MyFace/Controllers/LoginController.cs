@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,21 +17,41 @@ namespace MyFace.Controllers
     [Route("/login")]
     public class LoginController : ControllerBase
     {
-        [HttpGet("")]
-        public IActionResult GetUserData()
+        private readonly IUsersRepo _usersRepo;
+        public LoginController(IUsersRepo usersRepo)
         {
-            string authHeader = HttpContext.Request.Headers["Authorization"];
-            if (authHeader != null && authHeader.StartsWith("Basic"))
-            {
-                return Ok();
-            }
-            return Ok();
+            _usersRepo = usersRepo;
         }
 
-        [HttpPost("")]
-        public async Task<IActionResult> Login()
+        // [HttpGet("")]
+        // public IActionResult GetUserData()
+        // {
+        //     string authHeader = HttpContext.Request.Headers["Authorization"];
+        //     if (authHeader != null && authHeader.StartsWith("Basic"))
+        //     {
+        //         return Ok();
+        //     }
+        //     return Ok();
+        // }
+
+        [HttpGet("")]
+        public async Task<IActionResult> IsValidLogin([FromHeader] string authorization)
         {
-            await HttpContext.SignInAsync(new ClaimsPrincipal(
+            // (string Username, string Password) details;
+
+            // try
+            // {
+            //     details = AuthHelper.ExtractFromAuthHeader(authorization);
+            // }
+            // catch (Exception)
+            // {
+            //     return Unauthorized(
+            //         "Authorization header was not valid. Ensure you are using basic auth, and have correctly base64-encoded your username and password.");
+            // }
+
+            if (_usersRepo.HasAccess(authorization))
+            {
+                await HttpContext.SignInAsync(new ClaimsPrincipal(
                 new ClaimsIdentity(
                     new Claim[]
                     {
@@ -38,8 +59,27 @@ namespace MyFace.Controllers
                     }
                 )
             ));
-            return Ok();
+                return Ok();
+            }
+            else
+            {
+                return Unauthorized("Invalid login details.");
+            }
         }
+
+        // [HttpPost("")]
+        // public async Task<IActionResult> Login()
+        // {
+        //     await HttpContext.SignInAsync(new ClaimsPrincipal(
+        //         new ClaimsIdentity(
+        //             new Claim[]
+        //             {
+        //                 new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
+        //             }
+        //         )
+        //     ));
+        //     return Ok();
+        // }
     }
 }
 

@@ -80,7 +80,6 @@ namespace MyFace.Repositories
 
             // checking header username against exisisting db username
             var dbUser = _context.Users.FirstOrDefault(u => u.Username == username);
-
             var dbpasswordSalt = dbUser.PasswordSalt;
             // to hash header password
             var inputHashedPassword = HashGenerator.GetHashedPassword(dbpasswordSalt, password);
