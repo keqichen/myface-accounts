@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -43,6 +44,11 @@ namespace MyFace
             //build cookie;
             services.AddAuthentication()
                 .AddCookie("default");
+
+            services.Configure<AuthenticationOptions>(options =>
+            {
+                options.RequireAuthenticatedSignIn = false;
+            });
 
             services.AddTransient<IInteractionsRepo, InteractionsRepo>();
             services.AddTransient<IPostsRepo, PostsRepo>();

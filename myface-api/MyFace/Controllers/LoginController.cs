@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace MyFace.Controllers
         //     return Ok();
         // }
 
-        [HttpGet("")]
+        [HttpPost("")]
         public async Task<IActionResult> IsValidLogin([FromHeader] string authorization)
         {
             // (string Username, string Password) details;
@@ -49,39 +50,28 @@ namespace MyFace.Controllers
             //         "Authorization header was not valid. Ensure you are using basic auth, and have correctly base64-encoded your username and password.");
             // }
 
-            if (_usersRepo.HasAccess(authorization))
+            if (!ModelState.IsValid)
             {
-                await HttpContext.SignInAsync(new ClaimsPrincipal(
-                new ClaimsIdentity(
-                    new Claim[]
-                    {
-                        new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
-                    }
-                )
-            ));
-                return Ok();
+                return BadRequest(ModelState);
             }
-            else
-            {
-                return Unauthorized("Invalid login details.");
-            }
-        }
 
-        // [HttpPost("")]
-        // public async Task<IActionResult> Login()
+            await HttpContext.SignInAsync("default", new ClaimsPrincipal(
+            new ClaimsIdentity(
+                new Claim[]
+                {
+                        new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
+                }
+            )
+        ));
+            return Ok();
+        }
+        // else
         // {
-        //     await HttpContext.SignInAsync(new ClaimsPrincipal(
-        //         new ClaimsIdentity(
-        //             new Claim[]
-        //             {
-        //                 new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
-        //             }
-        //         )
-        //     ));
-        //     return Ok();
+        //     return Unauthorized("Invalid login details.");
         // }
     }
 }
+
 
 
 
