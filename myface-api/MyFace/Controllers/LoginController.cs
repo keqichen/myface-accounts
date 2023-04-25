@@ -36,8 +36,9 @@ namespace MyFace.Controllers
         // }
 
         [HttpPost("")]
-        public async Task<IActionResult> IsValidLogin([FromHeader] string authorization)
+        public async Task<IActionResult> IsValidLogin()
         {
+            //[FromHeader] string authorization
             // (string Username, string Password) details;
 
             // try
