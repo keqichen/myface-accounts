@@ -44,7 +44,10 @@ namespace MyFace
 
             //build cookie;
             services.AddAuthentication()
-                .AddCookie("default");
+                .AddCookie("default", o=>
+                {
+                    o.Cookie.Name = "mycookie";
+                });
 
             services.Configure<AuthenticationOptions>(options =>
             {
