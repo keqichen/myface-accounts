@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyFace.Models.Database;
 using MyFace.Models.Request;
 using MyFace.Models.Response;
 using MyFace.Repositories;
@@ -36,42 +37,37 @@ namespace MyFace.Controllers
         // }
 
         [HttpPost("")]
-        public async Task<IActionResult> IsValidLogin()
+        public async Task<IActionResult> IsValidLogin([FromHeader] string authorization)
         {
-            //[FromHeader] string authorization
-            // (string Username, string Password) details;
-
-            // try
-            // {
-            //     details = AuthHelper.ExtractFromAuthHeader(authorization);
-            // }
-            // catch (Exception)
-            // {
-            //     return Unauthorized(
-            //         "Authorization header was not valid. Ensure you are using basic auth, and have correctly base64-encoded your username and password.");
-            // }
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            await HttpContext.SignInAsync("default", new ClaimsPrincipal(
-            new ClaimsIdentity(
-                new Claim[]
-                {
+            try
+            {
+                _usersRepo.HasAccess(authorization);
+                var username = Encoding.UTF8.GetString(Convert.FromBase64String(authorization)).Split(':')[0];
+
+                await HttpContext.SignInAsync("default", new ClaimsPrincipal(
+                new ClaimsIdentity(
+                    new Claim[]
+                    {
                         new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
-                }
-            )
-        ));
-            return Ok();
+                    }
+                )
+            ));
+                Response.Cookies.Append("username", username, new CookieOptions { Expires = DateTime.Now.AddDays(30) } );
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return Unauthorized("Sorry, invalid username or password.");
+            }
         }
-        // else
-        // {
-        //     return Unauthorized("Invalid login details.");
-        // }
     }
 }
+
 
 
 
