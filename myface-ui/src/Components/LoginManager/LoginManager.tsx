@@ -1,4 +1,5 @@
-﻿import React, { createContext, ReactNode, useState } from "react";
+﻿import Cookies from "js-cookie";
+import React, { createContext, ReactNode, useState } from "react";
 
 
 export const LoginContext = createContext({
@@ -18,17 +19,19 @@ interface LoginManagerProps {
 }
 
 export function LoginManager(props: LoginManagerProps): JSX.Element {
-    const [loggedIn, setLoggedIn] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(Cookies.get("isLoggedIn")==="true");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
     function logIn() {
         // can i add a method to make it return response
         setLoggedIn(true);
+        Cookies.set("isLoggedIn", "true");
     }
 
     function logOut() {
         setLoggedIn(false);
+        Cookies.remove("isLoggedIn");
     }
 
     const context = {
