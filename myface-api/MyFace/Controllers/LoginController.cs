@@ -47,7 +47,15 @@ namespace MyFace.Controllers
             try
             {
                 _usersRepo.HasAccess(authorization);
-                var username = Encoding.UTF8.GetString(Convert.FromBase64String(authorization)).Split(':')[0];
+                //Console.Write(authorization);
+            }
+            catch (Exception)
+            {
+                return Unauthorized("Sorry, invalid username or password.");
+            }
+            
+            string encodedUsernamePassword = authorization.Substring("Basic ".Length).Trim();
+            var username = Encoding.UTF8.GetString(Convert.FromBase64String(encodedUsernamePassword)).Split(':')[0];
 
                 await HttpContext.SignInAsync("default", new ClaimsPrincipal(
                 new ClaimsIdentity(
@@ -60,13 +68,9 @@ namespace MyFace.Controllers
                 Response.Cookies.Append("username", username, new CookieOptions { Expires = DateTime.Now.AddDays(30) } );
                 return Ok();
             }
-            catch (Exception)
-            {
-                return Unauthorized("Sorry, invalid username or password.");
-            }
         }
     }
-}
+
 
 
 
