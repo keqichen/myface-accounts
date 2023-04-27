@@ -93,22 +93,25 @@ export async function createPost(newPost: NewPost) {
 export async function checkAuthHeader(username: string, password: string): Promise<boolean> {
     const response = await fetch(`https://localhost:5001/login`, {
         //include cookies;
-        method: "Get",
+        method: "POST",
         credentials: "include",
         headers: {
             //encoding is not encrypting/hashing anything but just writing something in a different way;
             'Authorization': `Basic ${btoa(`${username}:${password}`)}`,
             'Accept': 'application/json',
-            'Content-Type': 'multipart/form-data'
+            "Content-Type": 'application/json'
+            //'Content-Type': 'multipart/form-data'
         },
     }
     )
+
     if (response.ok) {
+        console.log("hello");
         return true;
     }
     else {
-        throw new Error(await response.json())
-
+        const errorMessage = await response.json();
+        throw new Error(errorMessage);
     }
     // return (response.json());
 
@@ -118,16 +121,4 @@ export async function checkAuthHeader(username: string, password: string): Promi
     // else { return true };
 }
 
-//fetch API of cookies
-// export async function loginCookies() {
-//     const response = await fetch(`https://localhost:5001/login`, {
-//         method: 'POST',
-//         credentials: 'include'
-//     })
-//     if (response.ok) {
-//         return true;
-//     }
-//     else {
-//         throw new Error(await response.json())
-//     }
-// }
+

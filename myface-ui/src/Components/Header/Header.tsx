@@ -1,6 +1,7 @@
 ﻿import React from "react";
 import {NavLink} from "react-router-dom";
 import './Header.scss';
+import { Username } from "./Username";
 
 export function Header(): JSX.Element {
     return (
@@ -15,6 +16,7 @@ export function Nav(): JSX.Element {
         <nav className="nav">
             <NavLink className="nav-link" to="/">Posts</NavLink>
             <NavLink className="nav-link" to="/users">Users</NavLink>
+            <Username />
         </nav>
     );
 }
